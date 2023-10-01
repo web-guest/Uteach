@@ -1,0 +1,112 @@
+<%- include('includes/header') %>
+
+<%- include('includes/flash') %>
+
+<div class="mt-2" style="display: flex;flex-wrap: wrap;">
+  <div class="col-lg"></div>
+  <div class="col-lg-7">
+  <div class="message-header sticky-top" style="display: flex; background-color: rgb(9, 71, 71);padding: 1rem; color: #fff;">
+    <div style="display: flex;width: 100%;">
+      <div style="padding-right: 5px;">
+        <a href="/viewSingleBatch/<%=batchData._id%>" style="text-decoration: none; color: #fff;">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </div>
+      <div class="text-center d-flex" style="width: 100%;">
+        <div>
+          <img class="avatar-small"  src="/images/profile/profile-<%= batchData.username %>.jpg" alt="">
+        </div>
+        <div class="row" style="width: 100%;">
+          <div class="col-sm-6 text-left" >
+            <span class="d-block"><strong>Teacher : </strong><%= batchData.teacherName %></span>
+            <span class="d-block"><strong>Subject : </strong><%= batchData.subjects %></span>
+          </div>
+          <div class="col-sm-6 text-left">
+            <span class="d-block"><strong>Class : </strong><%= batchData.class %></span>
+            <span class="d-block"> <strong>Session : </strong><%= batchData.session %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="float-right">
+      <i class="fas fa-ellipsis-v"></i>
+    </div>
+  </div>
+  <div class="message-container">
+  <div class="d-block text-center">
+   <span style="background-color: rgb(19, 77, 77);color: rgb(231, 225, 225); border-radius: 5px;padding-left: 5px;padding-right: 5px;">Connected</span> 
+  </div>
+  <%let lastSender="aksjhdgf"%>
+  <%messages.forEach(function(message){%>
+    <%if(message.username==user.username){%>
+      <%if(lastSender!=message.username){%>
+      <div class="chat-self">
+        <div class="chat-message">
+          <div class="chat-message-inner" style="margin-top: 3px;">
+            <div class="text-left" style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+            <div class="float-right" style="font-size: 9px;"><%=message.createdDate%></div>
+          </div>
+        </div>
+      </div>
+      <%lastSender=message.username%>
+      <%}else{%>
+      <div class="chat-self" >
+        <div class="chat-message">
+          <div class="chat-message-inner" style="border-radius: 8px;">
+            <div class="text-left" style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+            <div class="float-right" style="font-size: 9px;"><%=message.createdDate%></div>
+          </div>
+        </div>
+      </div>
+      <%lastSender=message.username%>
+      <%}%>
+    <%}else{%>
+      <%if(lastSender!=message.username){%>
+      <div class="chat-other">
+        <div class="chat-message">
+          <div style="display: flex;margin-top: 3px;">
+            <a href="/profile/"><img class="avatar-tiny" src="/images/profile/profile-<%=message.username%>.jpg"></a>
+            <div class="chat-message-inner" style="margin-left: .15rem;">
+              <a href="" style="color: #fff;"><strong><%=message.name%><%=(batchData.username==message.username) ? "(Sir)":""%></strong> </a>
+              <div style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+              <div class="float-left" style="font-size: 9px;"><%=message.createdDate%></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%lastSender=message.username%>
+      <%}else{%>
+      <div class="chat-other" style="margin-left: 1.8rem;">
+        <div class="chat-message">
+          <div class="chat-message-inner" style="border-radius: 8px;margin-left: .15rem;">
+            <div style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+            <div class="float-left" style="font-size: 9px;"><%=message.createdDate%></div>
+          </div>
+        </div>
+      </div>
+      <%lastSender=message.username%>
+      <%}%>
+    <%}%>
+    <%})%>
+  </div>
+  <div>
+    <div style="display: flex;">
+      <div class="text-center">
+        <img class="avatar-small" style="top:7px ;margin-left: 0rem;margin-right: 2px;" src="/images/profile/profile-<%=user.username%>.jpg" alt="">
+      </div>
+      <div class="post-form-container">
+        <form action="/group-chat/<%=batchData._id%>" method="post" style="display: flex;">
+          <input name="message" type="text" class="post-input-field" placeholder="Write your message here." required autocomplete="off">
+          <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+          <button class="post-button text-primary"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg"></div>
+</div>
+
+
+<%- include('includes/footer') %>

@@ -1,0 +1,112 @@
+<div class=" mb-2">
+  <div class="message-header sticky-top" style="display: flex; background-color: rgb(9, 71, 71);padding: 1rem; color: #fff;">
+    <div style="display: flex;width: 100%;">
+      <div style="padding-right: 5px;">
+        <a href="/messages" style="text-decoration: none; color: #fff;">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+      </div>
+      <a href="/profile/<%=messageTo.username%>" style="text-decoration: none; color: #fff;">
+        <div class="text-center" >
+          <img class="avatar-small"  src="/images/profile/profile-<%=messageTo.username%>.jpg" alt="">
+          <strong><%=messageTo.name%></strong>
+        </div>
+      </a>
+    </div>
+    <div class="float-right">
+      <i class="fas fa-ellipsis-v"></i>
+    </div>
+  </div>
+  <div class="message-container">
+  <div class="d-block text-center">
+   <span style="background-color: rgb(19, 77, 77);color: rgb(231, 225, 225); border-radius: 5px;padding-left: 5px;padding-right: 5px;">Connected</span> 
+  </div>
+  
+  <%let last="hcquwefcbqgwehcq"%>
+  <%let unseenMessages%>
+  <%if(messageRoom.user1==user.username){%>
+    <%unseenMessages=messageRoom.user2unseen%>
+  <%}else{%>
+    <%unseenMessages=messageRoom.user1unseen%>
+  <%}%>
+  <%let firstUnseenIndex=messageRoom.messages.length-unseenMessages%>
+  <%let index=0%>
+
+  <%messageRoom.messages.forEach(function(message){%>
+    <%if(message.from==user.username){%>
+      <%if(last!=message.from){%>
+        <div class="chat-self">
+          <div class="chat-message">
+            <div class="chat-message-inner" style="margin-top: 3px;">
+              <div class="text-left" style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+              <div class="float-right" style="font-size: 9px;">
+              <%=message.sendDate%> 
+              <%if(index>=firstUnseenIndex){%> 
+              <span ><i class="fas fa-check-double"></i>unseen</span>
+              <%}else{%>
+              <span class="text-warning"> <i class="fas fa-check-double"></i></span>
+              <%}%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%last=message.from%>
+        <%}else{%>
+        <div class="chat-self" >
+          <div class="chat-message">
+            <div class="chat-message-inner" style="border-radius: 8px;">
+              <div class="text-left" style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+              <div class="float-right" style="font-size: 9px;">
+              <%=message.sendDate%> 
+              <%if(index>=firstUnseenIndex){%> 
+              <span ><i class="fas fa-check-double"></i>unseen</span>
+              <%}else{%>
+              <span class="text-warning"> <i class="fas fa-check-double"></i></span>
+              <%}%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%last=message.from%>
+        <%}%>
+    <%}else{%>
+      <%if(last!=message.from){%>
+      <div class="chat-other">
+        <div class="chat-message">
+          <div class="chat-message-inner" style="margin-top: 3px;">
+            <div class="text-left" style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+            <div class="float-left" style="font-size: 9px;"><%=message.sendDate%></div>
+          </div>
+        </div>
+      </div>
+      <%last=message.from%>
+      <%}else{%>
+      <div class="chat-other">
+        <div class="chat-message">
+          <div class="chat-message-inner" style="border-radius: 8px;">
+            <div style="font-size: 14px;"><%=message.message%>&nbsp;</div> 
+            <div class="float-left" style="font-size: 9px;"><%=message.sendDate%></div>
+          </div>
+        </div>
+      </div>
+      <%last=message.from%>
+      <%}%>
+    <%}%>
+    <%index+=1%>
+  <%})%>
+  </div>
+  <div>
+    <div style="display: flex;">
+      <div class="text-center">
+        <img class="avatar-small" style="top:7px ;margin-left: 0rem;margin-right: 2px;" src="/images/profile/profile-<%=user.username%>.jpg" alt="">
+      </div>
+      <div class="post-form-container">
+        <form action="/sendMessage/<%=messageTo.username%>" method="post" style="display: flex;">
+          <input name="message" type="text" class="post-input-field" placeholder="Write your message here." required autocomplete="off">
+          <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+          <button class="post-button text-primary"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+  </div> 
+</div>

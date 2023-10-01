@@ -1,0 +1,130 @@
+         
+<%if(!allFeeds.length){%>
+  <button class="btn btn-lg btn-primary btn-block">No posts available!!</button>
+<%}%>
+
+<% allFeeds.forEach(function(post) { %>
+  <% liked=false %>
+<div class=" mb-2">
+  <div class="item-container" >
+    <div style="display: flex;">
+      <div class="text-center">
+        <img class="avatar-small" style="top:7px ;margin-left: 0rem;margin-right: 2px;" src="/images/profile/profile-<%=post.username%>.jpg" alt="">
+      </div>
+      <div class="post-header" style="width: 100%;display: flex;">
+        <div class="mr-auto" style="padding-left: 5px;">
+          <div style="margin: 0;padding: 0;">
+            <a href="/profile/<%=post.username%>"><strong><%=post.author %></strong></a>
+          </div>
+          <div style="margin: 0;padding: 0;">
+            <i><span>Posted on <%=post.createdDate %></span></i> <span style="font-weight: 500;">.</span><i class="fas fa-user-friends fa-sm"></i>
+          </div>
+        </div>
+        <div class="float-right">
+          <p style="margin-right: 8px;" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <strong><i class="fas fa-ellipsis-h"></i></strong>
+          </p>
+          <div class="dropdown-menu dropdown-menu-right">
+            <%if(user.username==post.username){%>
+              <form onsubmit="return deletePost(this);" class="inlineContainer " action="/post/<%=post._id%>/delete" method="POST">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                <button class="dropdown-item text-danger" type="submit" ><i class="fas fa-trash-alt "></i> Delete Post</button>
+              </form>
+           <% }else{%>
+              <p class="dropdown-item text-primary" >For Post Owner</p>
+            <%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr style="margin-bottom: .35rem;margin-top: 2px;">
+    <p>
+      <%=post.body %>
+      <%if(post.postType=="photo"){%>
+        <div class="photoPostContainer">
+          <img class="postedPhoto" src=<%=post.link%> alt="">
+        </div>
+        <%}%>
+    </p>
+    <% post.likedBy.forEach(function(likedBy) { %>
+      <%  if(likedBy.username==user.username){%>
+        <% liked=true %>
+    <%}})%>
+    <div style="display: flex;">
+      <div class="text-left <%= liked ? 'text-primary' : '' %>" style="width: 50%;">
+        <i class="far fa-thumbs-up"></i><span> <%= post.likedBy.length %> <%= post.likedBy.length>1 ? 'Likes' : 'Like' %></span>
+      </div>
+      <div class="text-right" style="width: 50%;">
+        <span><%= post.comments.length %> <%= post.comments.length>1  ? 'Comments' : 'Comment'%></span> 
+      </div>
+    </div>
+    <div style="display: flex;margin-bottom: 5px; border-top: 1px solid rgb(126, 124, 124);border-bottom: 1px solid rgb(126, 124, 124);">
+      <div class="text-center" style="width: 50%;">
+        <%  if(liked){%> 
+          <form class="inlineContainer" action="/disLike/<%=post._id%>" method="POST">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+            <button class="btn  btn-block text-primary" style="border: 0px;background: #fff;" type="submit">
+                <i class="far fa-thumbs-up"></i> Liked
+            </button>
+          </form>
+        <%}else{%> 
+          <form class="inlineContainer" action="/like/<%=post._id%>" method="POST">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+            <button class="btn  btn-block " style="border: 0px;background: #fff;" type="submit">
+                <i class="far fa-thumbs-up"></i> Like 
+            </button>
+          </form>
+        <%}%>
+      </div>
+      <div class="text-center" style="width: 50%;">
+        <button class="btn  btn-block" style="border: 0px;background: #fff;" type="button" data-toggle="collapse" data-target="#collapse<%= post._id %>" aria-expanded="false" aria-controls="collapseExample">
+          <i class="far fa-comment-alt"></i> <%= post.comments.length>1  ? 'Comments' : 'Comment'%>
+        </button>
+      </div>
+    </div>
+    <div class="collapse" id="collapse<%= post._id %>">
+      <div class="card card-body">
+        <p class="inlineContainer">  
+          <%if( post.comments.length==0){%>
+            <div class="text-muted small list-group-item">
+              <p class="btmMarginZero bolderFont">No one comment on this post till now , be the first one.</p>
+            </div>
+          <%}%>                         
+            <!-- comments loop will be here -->
+            <% post.comments.forEach(function(comment) { %>
+              <div class="text-muted small list-group-item">
+                  <a href="/profile/<%=comment.username%>">
+                    <img class="avatar-tiny" src="/images/profile/profile-<%=comment.username%>.jpg">
+                    <strong><a href="/profile/<%=comment.username%>"> <%=comment.commentBy %></a> </strong>
+                  </a>
+                <div >
+                  <i><strong>Commented on </strong> <%= comment.createdDate %></i>
+                </div>
+                  <p class="btmMarginZero textJustifyAlign" ><strong class="bolder"> Comment : </strong> <%= comment.comment %></p>                                           
+              </div> 
+            <% }) %>                                      
+            <!-- close -->
+        </p>
+      </div>
+    </div>
+    <!-- comment section -->
+      <div style="display: flex;">
+        <div class="text-center">
+          <img class="avatar-small" style="top:1px ;margin-left: 0rem;margin-right: 2px;" src="/images/profile/profile-<%=user.username%>.jpg" alt="">
+        </div>
+        <div class="post-form-container" style="padding: 4px;">
+          <form action="/comment/<%= post._id %>/post" method="post" style="display: flex;">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+            <input type="text" name="comment" class="post-input-field" placeholder="Write your comment here." required autocomplete="off">
+            <button class="post-button" type="submit" style="background-color: #f0f2f5;">Comment</button>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+<script>
+  function deletePost() {
+  return confirm('Do you really want to delete the post.');
+  }
+</script>
+<%})%>

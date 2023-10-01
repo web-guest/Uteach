@@ -1,0 +1,85 @@
+<div class="item-container">
+  <div id="accordion">
+    <div class="card">
+      <div class="" id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn btn-secondary btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <strong>Add Note</strong> <i class="fas fa-plus-square"></i>
+          </button>
+        </h5>
+      </div>
+
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body" style="background-color: #f0f2f5;">
+            <h2 class="bolder text-center">Add Notes</h2>
+            <form action="/add-library-item" method="POST" class="library-form">
+              <div class="form-group">
+                <label for="noteType-register" class="text-muted"><small>Note type</small></label>
+                <div id="noteType-register" class="text-center" style="display: flex;">
+                  <div class="col-6 form-control form-control-sm ">
+                  Text Note <input name="noteType" value="text" type="radio" required autocomplete="off" />
+                  </div>
+                  <div class="col-6 form-control form-control-sm ">
+                  Web Link <input name="noteType" value="webLink"  type="radio"  autocomplete="off" />
+                  </div>
+                </div>
+              </div>
+              <label for="about-register" class="text-muted"><small>About</small></label>
+              <input required id="about-register" name="about" class="form-control form-control-sm space" type="text" placeholder="Heading of the note">
+              <label for="body-register" class="text-muted"><small>Note body-content/link</small></label>
+              <textarea required name="content" id="body-register" cols="10" rows="2" class="form-control form-control-sm space" type="text"></textarea>
+              <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+              <button class="btn btn-primary btn-block btn-lg">Add note <i class="fas fa-plus-square"></i></button>
+            </form>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-2">
+    <h3><strong class="bolder">Your all text Notes</strong></h3>
+    <%if(!textNotes.length){%>
+      <button class="btn btn-primary btn-block">No text notes created</button>
+    <%}%>
+    <%textNotes.forEach((note)=>{%>
+    <div class="mb-2" style="width: 100%; background-color:#f0f2f5 ;border-radius: 5px;">
+        <div style="display: flex;background-color: #dee2e6;align-items: center;"> 
+          <div class="p-2 " style="width: 100%;">
+            <strong ><span class="bolder text-primary">Note About : </span><%= note.about%></strong>
+          </div>
+          <div> 
+            <a href="/library/item/<%=note.index%>/edit" class="text-primary mr-2"><i class="fas fa-edit"></i></a>
+          </div>
+        </div>
+        <div class="p-2"><strong>Body Content : </strong>
+          <%=note.content%>
+        </div>
+    </div>
+    <%})%>
+  </div>
+
+  <div class="mb-2">
+    <h3><strong class="bolder">Your all web-link Notes</strong></h3>
+    <%if(!webLinkNotes.length){%>
+      <button class="btn btn-primary btn-block">No web-link notes created</button>
+    <%}%>
+    <%webLinkNotes.forEach((note)=>{%>
+    <div class="mb-2" style="width: 100%; border-radius: 5px;">
+      <div style="display: flex;"> 
+        <div class="p-2 bg-secondary" style="width: 100%; display: flex;"> 
+          <div style="width: 100%;"><strong>Web-link Of :</strong><%= note.about%></div>
+          <div> 
+            <a href="/library/item/<%=note.index%>/edit" class="text-primary mr-2"><i class="fas fa-edit"></i></a>
+          </div>
+        </div>
+        <div class="btn btn-primary">
+          <a href="<%=note.content%>" target="_blank" style="color: #fff;">
+          Visite site
+          </a>
+        </div>
+      </div>
+    </div>
+    <%})%>
+  </div>
+ 
+</div>
+ 

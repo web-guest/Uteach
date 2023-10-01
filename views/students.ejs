@@ -1,0 +1,64 @@
+<%- include('includes/header') %>
+
+<%- include('includes/designs/profile-related-header') %>
+<!-- page structure will be here -->
+
+<div style="background-color: #fff;">
+  <h4 class="bolder col"><strong>All Students (<%=students.length%>)</strong></h4>
+  <%if(!students.length){%>
+    <%if(isVisitorsProfile){%>
+      <div class="connection-container">
+        <div class="btn btn-primary btn-block">You have no Student!</div>
+      </div>
+    <%}else{%>
+      <div class="connection-container">
+        <div class="btn btn-primary btn-block">No student available!</div>
+      </div>
+    <%}%>
+  <%}else{%>
+    <%if(students.length==1){%>
+      <div class="col">
+        <div class="connection-container">
+          <img style="border-radius: 5px;" height="70" width="70" src="/images/profile/profile-<%=students[0].username%>.jpg" alt="">
+          <div class="name-container">
+            <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/<%=students[0].username%>"><%=students[0].name%></a></strong>
+            <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+          </div>
+        </div>
+      </div>
+      
+    <%}else{%>
+      <%let middle=parseInt(students.length/2)%>
+      <div style="display: flex;    flex-wrap: wrap;">
+        <div class="col-md-6">
+          <%for(let i=0;i<middle;i++){%>
+            <div class="connection-container">
+              <img style="border-radius: 5px;" height="70" width="70" src="/images/profile/profile-<%=students[i].username%>.jpg" alt="">
+              <div class="name-container">
+                <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/<%=students[i].username%>"><%=students[i].name%></a></strong>
+                <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+              </div>
+            </div>
+          <%}%>
+        </div>
+        <div class="col-md-6" >
+          <%for(let j=middle;j<students.length;j++){%>
+          <div class="connection-container">
+            <img style="border-radius: 5px;" height="70" width="70" src="/images/profile/profile-<%=students[j].username%>.jpg" alt="">
+            <div class="name-container">
+              <strong class="d-block ml-2" style="width: 100%;"><a href="/profile/<%=students[j].username%>"><%=students[j].name%></a></strong>
+              <strong class="d-block float-right"><i class="fas fa-ellipsis-h"></i></strong>
+            </div>
+          </div>
+          <%}%>
+        </div>
+      </div>
+    <%}%>
+    
+  <%}%>
+</div>
+
+<!-- #################################### -->
+<%- include('includes/designs/profile-related-footer') %>
+
+<%- include('includes/footer') %>
